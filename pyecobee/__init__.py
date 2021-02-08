@@ -231,17 +231,34 @@ class Ecobee(object):
         log_msg_action = "set fan minimum on time."
         return self.make_request(body, log_msg_action)
 
-    def set_fan_mode(self, index, fan_mode, cool_temp, heat_temp, hold_type="nextTransition"):
+    def set_fan_mode(self, index, fan_mode, cool_temp, heat_temp,
+                     hold_type="nextTransition", hold_hours=2):
         ''' Set fan mode. Values: auto, minontime, on '''
-        body = {"selection": {
-                    "selectionType": "thermostats",
-                    "selectionMatch": self.thermostats[index]['identifier']},
-                "functions": [{"type": "setHold", "params": {
-                    "holdType": hold_type,
-                    "coolHoldTemp": int(cool_temp * 10),
-                    "heatHoldTemp": int(heat_temp * 10),
-                    "fan": fan_mode
-                }}]}
+        if hold_type == "holdHours":
+          body = {"selection": {
+                      "selectionType": "thermostats",
+                      "selectionMatch": self.thermostats[index]['identifier']},
+                  "functions": [{"type": "setHold", "params": {
+                      "holdType": hold_type,
+                      "holdHours": hold_hours,
+                      "coolHoldTemp": int(cool_temp * 10),
+                      "heatHoldTemp": int(heat_temp * 10),
+                      "fan": fan_mode,
+                      "isTemperatureAbsolute": False,
+                      "isTemperatureRelative": False,
+                  }}]}
+        else:
+          body = {"selection": {
+                      "selectionType": "thermostats",
+                      "selectionMatch": self.thermostats[index]['identifier']},
+                  "functions": [{"type": "setHold", "params": {
+                      "holdType": hold_type,
+                      "coolHoldTemp": int(cool_temp * 10),
+                      "heatHoldTemp": int(heat_temp * 10),
+                      "fan": fan_mode,
+                      "isTemperatureAbsolute": False,
+                      "isTemperatureRelative": False,
+                  }}]}
         log_msg_action = "set fan mode"
         return self.make_request(body, log_msg_action)
 
