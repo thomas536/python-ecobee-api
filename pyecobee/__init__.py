@@ -246,16 +246,27 @@ class Ecobee(object):
         return self.make_request(body, log_msg_action)
 
     def set_hold_temp(self, index, cool_temp, heat_temp,
-                      hold_type="nextTransition"):
+                      hold_type="nextTransition", hold_hours=2):
         ''' Set a hold '''
-        body = {"selection": {
-                    "selectionType": "thermostats",
-                    "selectionMatch": self.thermostats[index]['identifier']},
-                "functions": [{"type": "setHold", "params": {
-                    "holdType": hold_type,
-                    "coolHoldTemp": int(cool_temp * 10),
-                    "heatHoldTemp": int(heat_temp * 10)
-                }}]}
+        if hold_type == "holdHours":
+          body = {"selection": {
+                      "selectionType": "thermostats",
+                      "selectionMatch": self.thermostats[index]['identifier']},
+                  "functions": [{"type": "setHold", "params": {
+                      "holdType": hold_type,
+                      "holdHours": hold_hours,
+                      "coolHoldTemp": int(cool_temp * 10),
+                      "heatHoldTemp": int(heat_temp * 10)
+                  }}]}
+        else:
+          body = {"selection": {
+                      "selectionType": "thermostats",
+                      "selectionMatch": self.thermostats[index]['identifier']},
+                  "functions": [{"type": "setHold", "params": {
+                      "holdType": hold_type,
+                      "coolHoldTemp": int(cool_temp * 10),
+                      "heatHoldTemp": int(heat_temp * 10)
+                  }}]}
         log_msg_action = "set hold temp"
         return self.make_request(body, log_msg_action)
 
