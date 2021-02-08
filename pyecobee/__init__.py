@@ -184,7 +184,7 @@ class Ecobee(object):
         ''' Get new thermostat data from ecobee '''
         self.get_thermostats()
 
-    def make_request(self, body, log_msg_action, *, retry_count=0):
+    def make_request(self, body, log_msg_action, retry_count=0):
         url = 'https://api.ecobee.com/1/thermostat'
         header = {'Content-Type': 'application/json;charset=UTF-8',
                   'Authorization': 'Bearer ' + self.access_token}
